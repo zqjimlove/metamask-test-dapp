@@ -34,7 +34,11 @@
     "url": "https://github.com/MetaMask/test-dapp/issues"
   },
   "homepage": "https://metamask.github.io/test-dapp",
-  "dependencies": {},
+  "dependencies": {
+    "@reown/appkit": "^1.5.1",
+    "@reown/appkit-adapter-ethers5": "^1.5.1",
+    "@reown/appkit-siwe": "^1.5.1"
+  },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.5.1",
     "@lavamoat/preinstall-always-fail": "^2.0.0",

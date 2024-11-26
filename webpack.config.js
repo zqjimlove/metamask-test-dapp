@@ -23,6 +23,16 @@ module.exports = {
     main: './src/index.js',
     request: './src/request.js',
   },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/u,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+    ],
+  },
   output: {
     path: DIST,
     publicPath: DIST,

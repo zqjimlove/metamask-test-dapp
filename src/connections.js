@@ -1,4 +1,7 @@
 import { MetaMaskSDK } from '@metamask/sdk';
+import { createAppKit } from '@reown/appkit';
+import { Ethers5Adapter } from '@reown/appkit-adapter-ethers5';
+import { bsc } from '@reown/appkit/networks';
 import {
   handleNewAccounts,
   handleNewProviderDetail,
@@ -13,6 +16,7 @@ const dappMetadata = {
   name: 'E2e Test Dapp',
   description: 'This is the E2e Test Dapp',
   url: 'https://metamask.github.io/test-dapp/',
+  icons: ['https://metamask.github.io/test-dapp/icon-192x192.png'],
 };
 
 // eslint-disable-next-line require-unicode-regexp
@@ -23,12 +27,14 @@ const sdk = new MetaMaskSDK({ dappMetadata });
 export const initializeWeb3Modal = () => {
   if (!isAndroid) {
     try {
-      // eslint-disable-next-line node/global-require
-      const { createWeb3Modal, defaultConfig } = require('@web3modal/ethers5');
-
-      const web3Modal = createWeb3Modal({
-        ethersConfig: defaultConfig({ metadata: dappMetadata }),
-        projectId: 'e6360eaee594162688065f1c70c863b7',
+      const web3Modal = createAppKit({
+        adapters: [new Ethers5Adapter()],
+        metadata: dappMetadata,
+        networks: [bsc],
+        projectId: '15c0a5109c74b6d2dbf3cfc3b71b2c13',
+        features: {
+          analytics: true, // Optional - defaults to your Cloud configuration
+        },
       });
 
       console.log('Web3Modal initialized successfully');
@@ -93,6 +99,12 @@ export async function handleSdkConnect(name, button, isConnected) {
 }
 
 export async function handleWalletConnect(name, button, isConnected) {
+  console.log(
+    '💬️ ~ handleWalletConnect ~ name, button, isConnected:',
+    name,
+    button,
+    isConnected,
+  );
   if (isConnected) {
     handleNewAccounts([]);
     updateFormElements();
@@ -102,9 +114,13 @@ export async function handleWalletConnect(name, button, isConnected) {
     button.classList.add('btn-primary');
     button.classList.remove('btn-danger');
   } else {
-    const { provider } = walletConnect.getWalletProvider();
-    const uuid = provider.signer.uri;
-    const providerDetail = _setProviderDetail(provider, name, uuid);
+    const walletProvider = walletConnect.getWalletProvider();
+    // console.log(
+    //   '💬️ ~ handleWalletConnect ~ walletConnect.getWalletProvider():',
+    //   walletConnect.getWalletProvider(),
+    // );
+    // const uuid = provider.signer.uri;
+    const providerDetail = _setProviderDetail(walletProvider, name, Date.now());
     await setActiveProviderDetail(providerDetail);
     handleNewProviderDetail(providerDetail);
     updateWalletConnectState(true);

@@ -172,6 +172,7 @@ const eip747Status = document.getElementById('eip747Status');
 
 // Send Eth Section
 const sendButton = document.getElementById('sendButton');
+const signButton = document.getElementById('signButton');
 const sendEIP1559Button = document.getElementById('sendEIP1559Button');
 const sendEIP1559WithoutGasButton = document.getElementById(
   'sendEIP1559WithoutGasButton',
@@ -411,6 +412,7 @@ const allConnectedButtons = [
   deployMultisigButton,
   sendMultisigButton,
   sendButton,
+  signButton,
   createToken,
   decimalUnitsInput,
   approveTokensToInput,
@@ -484,6 +486,7 @@ const initialConnectedButtons = [
   deployNFTsButton,
   deployERC1155Button,
   sendButton,
+  signButton,
   deployFailingButton,
   deployMultisigButton,
   createToken,
@@ -546,16 +549,15 @@ let isSdkConnected = false;
 
 // TODO: Need to align with @metamask/onboarding
 const isMetaMaskInstalled = () => provider && provider.isMetaMask;
-
+walletConnect.subscribeWalletInfo(() => {
+  handleWalletConnect(
+    'wallet-connect',
+    walletConnectBtn,
+    isWalletConnectConnected,
+  );
+});
 walletConnectBtn.onclick = () => {
   walletConnect.open();
-  walletConnect.subscribeProvider(() => {
-    handleWalletConnect(
-      'wallet-connect',
-      walletConnectBtn,
-      isWalletConnectConnected,
-    );
-  });
 };
 
 sdkConnectBtn.onclick = async () => {
@@ -812,6 +814,7 @@ const handleEIP1559Support = async () => {
     sendWithInvalidGasLimit.disabled = false;
     sendWithInvalidGasLimit.hidden = false;
     sendButton.innerText = 'Send Legacy Transaction';
+    signButton.innerText = 'Sign Legacy Transaction';
   } else {
     sendEIP1559Button.disabled = true;
     sendEIP1559Button.hidden = true;
@@ -824,6 +827,7 @@ const handleEIP1559Support = async () => {
     sendWithInvalidGasLimit.disabled = true;
     sendWithInvalidGasLimit.hidden = true;
     sendButton.innerText = 'Send';
+    signButton.innerText = 'Sign';
   }
 };
 
@@ -1845,8 +1849,25 @@ const initializeFormElements = () => {
       params: [
         {
           from: accounts[0],
-          to: '0x0c54FcCd2e384b4BB6f2E405Bf5Cbc15a017AaFb',
-          value: '0x0',
+          to: accounts[0],
+          value: '0x1',
+          gasLimit: '0x5208',
+          gasPrice: '0x2540be400',
+          type: '0x0',
+        },
+      ],
+    });
+    console.log(result);
+  };
+
+  signButton.onclick = async () => {
+    const result = await provider.request({
+      method: 'eth_signTransaction',
+      params: [
+        {
+          from: accounts[0],
+          to: accounts[0],
+          value: '0x1',
           gasLimit: '0x5208',
           gasPrice: '0x2540be400',
           type: '0x0',
