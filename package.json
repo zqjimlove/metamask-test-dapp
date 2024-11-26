@@ -35,7 +35,7 @@
   },
   "homepage": "https://metamask.github.io/test-dapp",
   "dependencies": {
-    "@reown/appkit": "^1.5.1",
+    "@reown/appkit": "^1.5.2",
     "@reown/appkit-adapter-ethers5": "^1.5.1",
     "@reown/appkit-siwe": "^1.5.1"
   },
