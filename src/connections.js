@@ -1,7 +1,7 @@
 import { MetaMaskSDK } from '@metamask/sdk';
 import { createAppKit } from '@reown/appkit';
 import { Ethers5Adapter } from '@reown/appkit-adapter-ethers5';
-import { bsc, mainnet } from '@reown/appkit/networks';
+import { bsc } from '@reown/appkit/networks';
 import {
   handleNewAccounts,
   handleNewProviderDetail,
@@ -30,7 +30,7 @@ export const initializeWeb3Modal = () => {
       const web3Modal = createAppKit({
         adapters: [new Ethers5Adapter()],
         metadata: dappMetadata,
-        networks: [mainnet],
+        networks: [bsc],
         projectId: '15c0a5109c74b6d2dbf3cfc3b71b2c13',
         features: {
           analytics: true, // Optional - defaults to your Cloud configuration
