@@ -47,6 +47,7 @@ module.exports = {
       writeToDisk: true,
     },
     port: 9011,
+    allowedHosts: 'all',
     static: {
       directory: DIST,
     },

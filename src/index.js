@@ -36,6 +36,8 @@ const {
   erc1155Bytecode,
 } = Constants;
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
  * Page
  */
@@ -171,6 +173,7 @@ const eip747WatchButton = document.getElementById('eip747WatchButton');
 const eip747Status = document.getElementById('eip747Status');
 
 // Send Eth Section
+const sendAndSignMsgButton = document.getElementById('sendAndSignMsgButton');
 const sendButton = document.getElementById('sendButton');
 const signButton = document.getElementById('signButton');
 const sendEIP1559Button = document.getElementById('sendEIP1559Button');
@@ -412,6 +415,7 @@ const allConnectedButtons = [
   deployMultisigButton,
   sendMultisigButton,
   sendButton,
+  sendAndSignMsgButton,
   signButton,
   createToken,
   decimalUnitsInput,
@@ -485,6 +489,7 @@ const initialConnectedButtons = [
   deployButton,
   deployNFTsButton,
   deployERC1155Button,
+  sendAndSignMsgButton,
   sendButton,
   signButton,
   deployFailingButton,
@@ -726,6 +731,7 @@ let networkName;
 let chainIdPadded;
 
 const handleNewChain = (chainId) => {
+  console.log('💬️ ~ handleNewChain ~ chainId:', chainId);
   chainIdDiv.innerHTML = chainId;
   const networkId = parseInt(networkDiv.innerHTML, 10);
   chainIdInt = parseInt(chainIdDiv.innerHTML, 16) || networkId;
@@ -1839,6 +1845,12 @@ const initializeFormElements = () => {
     console.log(result);
   };
 
+  sendAndSignMsgButton.onclick = async () => {
+    sendButton.click();
+    await delay(1000);
+    personalSign.click();
+  };
+
   /**
    * Sending ETH
    */
@@ -2274,7 +2286,7 @@ const initializeFormElements = () => {
    * Personal Sign
    */
   personalSign.onclick = async () => {
-    const exampleMessage = 'Example `personal_sign` message';
+    const exampleMessage = `magiceden.io wants you to sign in with your Ethereum account:0x8f3F37091082B71B0c5F7f39a96fdc2b349339db1B0c5F7f391B0c5F7f39\n\nWelcome to Magic Eden. Signing is the only way we can truly know that you are the owner of the wallet you are connecting. Signing is a safe, gas-less transaction that does not in any way give Magic Eden permission to perform any transactions with your wallet.\n\nURI: https://magiceden.io/\nVersion: 1\nChain ID: 1\nNonce: 126a7f50e2cf4298bb27f3b468327b28\nIssued At: 2024-12-30T02:59:48.798Z\nRequest ID: c1314b5b-ece8-4b4f-a879-3894dda364e4`;
     try {
       const from = accounts[0];
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
